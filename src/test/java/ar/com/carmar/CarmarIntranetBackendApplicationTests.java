@@ -1,0 +1,13 @@
+package ar.com.carmar;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class CarmarIntranetBackendApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}
