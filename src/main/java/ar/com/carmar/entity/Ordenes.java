@@ -70,4 +70,7 @@ public class Ordenes {
     @JsonManagedReference
     private Set<OrdenesDocumentos> ordenesDocumentos = new HashSet<>();
 
+    public Ordenes(Long ordId) {
+        this.ordId = ordId;
+    }
 }

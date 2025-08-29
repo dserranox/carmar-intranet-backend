@@ -1,7 +1,7 @@
 package ar.com.carmar.service;
 
 import ar.com.carmar.entity.Usuarios;
-import ar.com.carmar.repository.UsuarioRepository;
+import ar.com.carmar.repository.UsuariosRepository;
 import ar.com.carmar.repository.VwUsuarioPermisosRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,19 +15,19 @@ import java.util.stream.Collectors;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UsuarioRepository usuarioRepository;
+    private final UsuariosRepository usuariosRepository;
     private final VwUsuarioPermisosRepository permisosRepository;
 
-    public CustomUserDetailsService(UsuarioRepository usuarioRepository,
+    public CustomUserDetailsService(UsuariosRepository usuariosRepository,
                                     VwUsuarioPermisosRepository permisosRepository) {
-        this.usuarioRepository = usuarioRepository;
+        this.usuariosRepository = usuariosRepository;
         this.permisosRepository = permisosRepository;
     }
 
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Usuarios u = usuarioRepository.findByUsernameIgnoreCase(username)
+        Usuarios u = usuariosRepository.findByUsernameIgnoreCase(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
         if (Boolean.FALSE.equals(u.getActivo())) throw new UsernameNotFoundException("Usuario inactivo");
 

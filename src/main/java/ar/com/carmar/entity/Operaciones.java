@@ -32,4 +32,8 @@ public class Operaciones {
 
     @Column(name = "OPE_ORDEN")
     private Integer opeOrden;
+
+    public Operaciones(Long opeId) {
+        this.opeId = opeId;
+    }
 }
