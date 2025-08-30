@@ -20,12 +20,10 @@ public class TareasController {
         this.tareasService = tareasService;
     }
 
-//    @GetMapping()
-//    public ResponseEntity<List<OrdenResponseDTO>> getAll(
-//            @RequestParam @NotNull Integer year
-//    ) throws IOException {
-//        return ResponseEntity.ok("tareasService.getClass()");
-//    }
+    @GetMapping("/byUsername")
+    public ResponseEntity<List<TareasResponseDTO>> getAll() throws IOException {
+        return ResponseEntity.ok(tareasService.getTareasByUser());
+    }
 
 
     @PostMapping()
@@ -33,5 +31,12 @@ public class TareasController {
             @RequestBody TareasResponseDTO tareaDto
     ) throws IOException {
         return ResponseEntity.ok(tareasService.saveTareas(tareaDto.getOrdenId(), tareaDto.getOperacionId(), tareaDto.getNroMaquina()));
+    }
+
+    @PostMapping("/finalizar-tarea")
+    public ResponseEntity<TareasResponseDTO> finalizarTarea(
+            @RequestBody TareasResponseDTO tareaDto
+    ) throws IOException {
+        return ResponseEntity.ok(tareasService.finalizarTareas(tareaDto));
     }
 }

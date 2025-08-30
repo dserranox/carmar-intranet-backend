@@ -53,4 +53,11 @@ public class OrdersController {
         int count = ordenesService.bulkSaveFromDtos(year, path);
         return ResponseEntity.ok(count);
     }
+
+    @PostMapping("/finalizar-orden")
+    public ResponseEntity<OrdenResponseDTO> finalizarORden(
+            @RequestBody OrdenResponseDTO ordenResponseDTO
+    ) throws IOException {
+        return ResponseEntity.ok(ordenesService.finalizarOrden(ordenResponseDTO));
+    }
 }

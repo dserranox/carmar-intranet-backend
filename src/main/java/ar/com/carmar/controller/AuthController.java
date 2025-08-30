@@ -44,8 +44,7 @@ public class AuthController {
         resp.setToken(token);
         resp.setUsername(principal.getUsername());
         resp.setAuthorities(authorities);
-        // decodificar expiración desde el provider (re-creamos para saber exp exacta)
-        resp.setExpiresAt(Instant.now().plusSeconds(60L * Long.parseLong(System.getProperty("security.jwt.exp-minutes","120"))));
+        resp.setExpiresAt(Instant.now().plusSeconds(60L * Long.parseLong(System.getProperty("security.jwt.exp-minutes","120"))).toEpochMilli());
         return ResponseEntity.ok(resp);
     }
 

@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class LoginResponse {
     private String token;
-    private Instant expiresAt;
+    private Long expiresAt;
     private String tokenType = "Bearer";
     private String username;
     private List<String> authorities;

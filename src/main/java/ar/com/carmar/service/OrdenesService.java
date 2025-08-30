@@ -11,22 +11,23 @@ import ar.com.carmar.repository.ClienteRepository;
 import ar.com.carmar.repository.OrdenesRepository;
 import ar.com.carmar.repository.ProductosRepository;
 import ar.com.carmar.repository.SituacionesRepository;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
-public class OrdenesService {
+public class OrdenesService extends BaseService{
     private final OrdenesRepository ordenesRepository;
     private final ExcelOrderService excelOrderService;
     private final ProductosRepository productosRepository;
@@ -126,6 +127,7 @@ public class OrdenesService {
             entity.setCliente(optCliente.get());
         }
 
+        auditar(entity, "JOB_ORDENES");
         return ordenesRepository.save(entity);
     }
 
@@ -139,5 +141,21 @@ public class OrdenesService {
             count++;
         }
         return count;
+    }
+
+    public OrdenResponseDTO finalizarOrden(OrdenResponseDTO ordenDto) {
+        Ordenes orden = ordenesRepository.findById(ordenDto.getId()).orElseGet(Ordenes::new);
+
+        if (orden == null){
+            throw new EntityNotFoundException("Orden no encontrada.");
+        }
+        Optional<Situaciones> situacionTerminada = situacionesRepository.findBySitEstadoClaveIgnoreCase("TERMINADO");
+
+        orden.setFechaFinalizacion(LocalDateTime.now());
+        orden.setSituacion(situacionTerminada.get());
+        auditar(orden, SecurityContextHolder.getContext().getAuthentication().getName() );
+
+        ordenesRepository.save(orden);
+        return toDto(orden);
     }
 }

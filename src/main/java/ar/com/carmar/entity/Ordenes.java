@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,7 +19,7 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Ordenes {
+public class Ordenes implements IAuditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ORD_ID")
@@ -70,6 +71,17 @@ public class Ordenes {
     @JsonManagedReference
     private Set<OrdenesDocumentos> ordenesDocumentos = new HashSet<>();
 
+
+    @Column(name = "AUD_USR_INS", nullable = false, length = 250)
+    private String audUsrIns;
+    @Column(name = "AUD_USR_UPD", length = 250)
+    private String audUsrUpd;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "AUD_FECHA_INS", nullable = false, length = 7)
+    private Date audFechaIns;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "AUD_FECHA_UPD", length = 7)
+    private Date audFechaUpd;
     public Ordenes(Long ordId) {
         this.ordId = ordId;
     }
