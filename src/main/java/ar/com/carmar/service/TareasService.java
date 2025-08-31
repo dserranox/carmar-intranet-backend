@@ -62,7 +62,7 @@ public class TareasService extends BaseService {
 
         String usernameFiltro = isAdmin ? null : currentUser;
 
-        return tareasRepository.findAll(TareasSpecifications.byUserName(usernameFiltro)).stream().map(tarea -> {
+        return tareasRepository.findAll(TareasSpecifications.byUserName(usernameFiltro), Sort.by("tarFechaInicio").descending()).stream().map(tarea -> {
             return new TareasResponseDTO(tarea);
         }).collect(Collectors.toList());
     }
