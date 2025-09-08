@@ -1,7 +1,6 @@
 package ar.com.carmar.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,26 +8,26 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "ORDENES_DOCUMENTOS")
+@Table(name = "PRODUCTO_DOCUMENTOS")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrdenesDocumentos {
+public class ProductoDocumentos {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ODO_ID")
-    private Long odoId;
+    @Column(name = "PDO_ID")
+    private Long pdoId;
 
-    @Column(name="ODO_NOMBRE")
-    private String odoNombre;
+    @Column(name="PDO_NOMBRE")
+    private String pdoNombre;
 
-    @Column(name="ODO_DRIVE_URL", nullable = false, length = 64)
-    private String odoDriveUrl;
+    @Column(name="PDO_DRIVE_URL", nullable = false)
+    private String pdoDriveUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ODO_ORD_ID")
+    @JoinColumn(name = "PDO_PRD_ID")
     @JsonBackReference
-    private Ordenes ordenes;
+    private Productos producto;
 
 }

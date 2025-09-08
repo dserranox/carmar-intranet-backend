@@ -27,5 +27,4 @@ public class OrdenResponseDTO {
     private LocalDateTime fechaInicio;
     private LocalDateTime fechaFinalizacion;
     private String ordenInterna;
-    private List<OrdenesDocumentosDTO> ordenesDocumentosDTOs;
 }

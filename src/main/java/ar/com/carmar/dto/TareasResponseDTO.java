@@ -16,6 +16,7 @@ import java.util.List;
 public class TareasResponseDTO {
     private Long id;
     private Long ordenId;
+    private String nroPlan;
     private Long operacionId;
     private String operacionNombre;
     private String operacionNombreCorto;
@@ -26,7 +27,7 @@ public class TareasResponseDTO {
     private String observaciones;
     private String username;
     private Integer ordCantidad;
-    private List<OrdenesDocumentosDTO> documentos;
+    private List<ProductoDocumentosDTO> documentos;
 
     public TareasResponseDTO(Tareas tareas) {
         this.id = tareas.getTarId();
@@ -41,15 +42,22 @@ public class TareasResponseDTO {
         this.observaciones = tareas.getTarObservaciones();
         this.username = tareas.getAudUsrIns();
         this.ordCantidad = tareas.getOrden().getCantidad();
-        this.documentos = tareas.getOrden().getOrdenesDocumentos()
-                .stream()
-                .map(doc -> {
-                    OrdenesDocumentosDTO d = new OrdenesDocumentosDTO();
-                    d.setOdoId(doc.getOdoId());
-                    d.setOdoNombre(doc.getOdoNombre());
-                    d.setOdoDriveUrl(doc.getOdoDriveUrl());
-                    return d;
-                })
-                .toList();
+
+        var prod = (tareas.getOrden() != null) ? tareas.getOrden().getProducto() : null;
+        if (prod != null && prod.getProductoDocumentos() != null) {
+            this.nroPlan = tareas.getOrden().getOrdNroPlan();
+            this.documentos = prod.getProductoDocumentos()
+                    .stream()
+                    .map(doc -> {
+                        ProductoDocumentosDTO d = new ProductoDocumentosDTO();
+                        d.setPdoId(doc.getPdoId());
+                        d.setPdoNombre(doc.getPdoNombre());
+                        d.setPdoDriveUrl(doc.getPdoDriveUrl());
+                        return d;
+                    })
+                    .toList();
+        } else {
+            this.documentos = java.util.Collections.emptyList();
+        }
     }
 }

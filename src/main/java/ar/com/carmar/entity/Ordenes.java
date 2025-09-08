@@ -67,11 +67,6 @@ public class Ordenes implements IAuditable {
     @Column(name="ORD_OBSERVACION", length = 1024)
     private String ordObservacion;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "ordenes")
-    @JsonManagedReference
-    private Set<OrdenesDocumentos> ordenesDocumentos = new HashSet<>();
-
-
     @Column(name = "AUD_USR_INS", nullable = false, length = 250)
     private String audUsrIns;
     @Column(name = "AUD_USR_UPD", length = 250)

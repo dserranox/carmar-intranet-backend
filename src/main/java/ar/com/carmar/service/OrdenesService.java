@@ -1,7 +1,6 @@
 package ar.com.carmar.service;
 
 import ar.com.carmar.dto.OrdenResponseDTO;
-import ar.com.carmar.dto.OrdenesDocumentosDTO;
 import ar.com.carmar.dto.OrdenesExcelDTO;
 import ar.com.carmar.entity.Clientes;
 import ar.com.carmar.entity.Ordenes;
@@ -74,19 +73,19 @@ public class OrdenesService extends BaseService{
         if (ordenes.getSituacion()!=null) {
             ordenResponseDTO.setSituacionClave(ordenes.getSituacion().getSitEstadoClave());
         }
-        if (!ordenes.getOrdenesDocumentos().isEmpty()){
-            List<OrdenesDocumentosDTO> documentosDTOs = ordenes.getOrdenesDocumentos()
-                    .stream()
-                    .map(doc -> {
-                        OrdenesDocumentosDTO d = new OrdenesDocumentosDTO();
-                        d.setOdoId(doc.getOdoId());
-                        d.setOdoNombre(doc.getOdoNombre());
-                        d.setOdoDriveUrl(doc.getOdoDriveUrl());
-                        return d;
-                    })
-                    .toList();
-            ordenResponseDTO.setOrdenesDocumentosDTOs(documentosDTOs);
-        }
+//        if (!ordenes.getOrdenesDocumentos().isEmpty()){
+//            List<OrdenesDocumentosDTO> documentosDTOs = ordenes.getOrdenesDocumentos()
+//                    .stream()
+//                    .map(doc -> {
+//                        OrdenesDocumentosDTO d = new OrdenesDocumentosDTO();
+//                        d.setOdoId(doc.getOdoId());
+//                        d.setOdoNombre(doc.getOdoNombre());
+//                        d.setOdoDriveUrl(doc.getOdoDriveUrl());
+//                        return d;
+//                    })
+//                    .toList();
+//            ordenResponseDTO.setOrdenesDocumentosDTOs(documentosDTOs);
+//        }
         return ordenResponseDTO;
     }
     @Transactional

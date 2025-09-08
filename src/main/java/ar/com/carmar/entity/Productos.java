@@ -1,10 +1,14 @@
 package ar.com.carmar.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "PRODUCTOS", uniqueConstraints = @UniqueConstraint(columnNames = {"prdCodigoProducto"}))
@@ -23,4 +27,10 @@ public class Productos {
 
     @Column(name = "PRD_DESCRIPCION", length = 255)
     private String prdDescripcion;
+
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "producto")
+    @JsonManagedReference
+    private Set<ProductoDocumentos> productoDocumentos = new HashSet<>();
+
 }

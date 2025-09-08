@@ -1,7 +1,9 @@
 package ar.com.carmar.service;
 
+import ar.com.carmar.dto.ProductoDocumentosDTO;
 import ar.com.carmar.dto.TareasResponseDTO;
 import ar.com.carmar.entity.*;
+import ar.com.carmar.repository.OrdenesRepository;
 import ar.com.carmar.repository.TareasRepository;
 import ar.com.carmar.repository.UsuariosRepository;
 import ar.com.carmar.repository.specifications.TareasSpecifications;
@@ -21,10 +23,13 @@ public class TareasService extends BaseService {
 
     private final TareasRepository tareasRepository;
     private final UsuariosRepository usuariosRepository;
+    private final OrdenesRepository ordenesRepository;
 
-    public TareasService (TareasRepository tareasRepository, UsuariosRepository usuariosRepository){
+    public TareasService (TareasRepository tareasRepository, UsuariosRepository usuariosRepository,
+                          OrdenesRepository ordenesRepository){
         this.tareasRepository = tareasRepository;
         this.usuariosRepository = usuariosRepository;
+        this.ordenesRepository = ordenesRepository;
     }
 
     public TareasResponseDTO saveTareas(Long ordenId, Long operacionId, Integer nroMaquina){
@@ -34,7 +39,24 @@ public class TareasService extends BaseService {
 
         Tareas tarea = new Tareas(new Ordenes(ordenId), new Operaciones(operacionId), nroMaquina, usuario, LocalDateTime.now());
         auditar(tarea, usuario.getUsername());
-        return new TareasResponseDTO(tareasRepository.save(tarea));
+
+        TareasResponseDTO resposeDTO = new TareasResponseDTO(tareasRepository.save(tarea));
+
+        Ordenes orden = ordenesRepository.findById(ordenId).orElseThrow(() -> new IllegalStateException("Orden no encontrada: " + ordenId));
+
+        if(orden.getProducto() != null) {
+            resposeDTO.setDocumentos(orden.getProducto().getProductoDocumentos()
+                    .stream()
+                    .map(doc -> {
+                        ProductoDocumentosDTO d = new ProductoDocumentosDTO();
+                        d.setPdoId(doc.getPdoId());
+                        d.setPdoNombre(doc.getPdoNombre());
+                        d.setPdoDriveUrl(doc.getPdoDriveUrl());
+                        return d;
+                    })
+                    .toList());
+        }
+        return resposeDTO;
     }
 
     public TareasResponseDTO finalizarTareas(TareasResponseDTO tareaDto){

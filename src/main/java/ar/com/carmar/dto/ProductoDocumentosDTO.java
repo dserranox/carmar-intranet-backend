@@ -9,10 +9,10 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrdenesDocumentosDTO {
-    private Long odoId;
-    private String odoNombre;
-    private String odoDriveUrl;
-    private OrdenResponseDTO orden;
+public class ProductoDocumentosDTO {
+    private Long pdoId;
+    private String pdoNombre;
+    private String pdoDriveUrl;
+//    private OrdenResponseDTO orden;
 
 }

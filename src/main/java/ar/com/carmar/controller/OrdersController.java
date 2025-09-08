@@ -3,6 +3,7 @@ package ar.com.carmar.controller;
 import ar.com.carmar.dto.OrdenResponseDTO;
 import ar.com.carmar.service.ExcelOrderService;
 import ar.com.carmar.service.OrdenesService;
+import jakarta.annotation.security.PermitAll;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -46,6 +47,7 @@ public class OrdersController {
     }
 
     @PostMapping("/sync-from-excel")
+    @PermitAll
     public ResponseEntity<Integer> syncFromExcel(
             @RequestParam @NotNull Integer year,
             @RequestParam(required = false) String path
