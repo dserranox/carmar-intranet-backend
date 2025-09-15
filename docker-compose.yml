@@ -1,0 +1,25 @@
+services:
+  carmar-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: carmar-backend:prod
+    container_name: carmar-backend
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      # Override application.properties via envs
+      DBCP_CARMAR_URL: ${DBCP_CARMAR_URL:-jdbc:postgresql://host.docker.internal:5432/carmardb}
+      DBCP_CARMAR_USERNAME: ${DBCP_CARMAR_USERNAME:-carmaruser}
+      DBCP_CARMAR_PASS: ${DBCP_CARMAR_PASS:-carmarpass}
+      # Optional: tune server port if you prefer a custom one
+      # SERVER_PORT: ${SERVER_PORT:-8080}
+    ports:
+      - "${SERVER_PORT:-8080}:8080"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/manage/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 20s

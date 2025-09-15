@@ -1,0 +1,4 @@
+DBCP_CARMAR_URL=jdbc:postgresql://host.docker.internal:5432/carmardb
+DBCP_CARMAR_USERNAME=carmaruser
+DBCP_CARMAR_PASS=carmarpass
+SERVER_PORT=8080
