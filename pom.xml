@@ -13,7 +13,7 @@
 
   <groupId>ar.com.carmar</groupId>
   <artifactId>carmar-intranet-backend</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>carmar-intranet-backend</name>
   <description>Carmar Intranet Backend</description>
 
