@@ -1,10 +1,14 @@
 package ar.com.carmar.controller;
 
+import ar.com.carmar.dto.OrdenCreateDTO;
 import ar.com.carmar.dto.OrdenResponseDTO;
+import ar.com.carmar.enums.SituacionesEnum;
 import ar.com.carmar.service.ExcelOrderService;
 import ar.com.carmar.service.OrdenesService;
 import jakarta.annotation.security.PermitAll;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -56,10 +60,25 @@ public class OrdersController {
         return ResponseEntity.ok(count);
     }
 
-    @PostMapping("/finalizar-orden")
-    public ResponseEntity<OrdenResponseDTO> finalizarORden(
+//    @PostMapping("/finalizar-orden")
+//    public ResponseEntity<OrdenResponseDTO> finalizarORden(
+//            @RequestBody OrdenResponseDTO ordenResponseDTO
+//    ) throws IOException {
+//        return ResponseEntity.ok(ordenesService.avanzarOrden(ordenResponseDTO, SituacionesEnum.TERMINADO.getDescripcion()));
+//    }
+
+    @PostMapping("/avanzar-orden")
+    public ResponseEntity<OrdenResponseDTO> avanzarOrden(
             @RequestBody OrdenResponseDTO ordenResponseDTO
     ) throws IOException {
-        return ResponseEntity.ok(ordenesService.finalizarOrden(ordenResponseDTO));
+        return ResponseEntity.ok(ordenesService.avanzarOrden(ordenResponseDTO, ordenResponseDTO.getSituacionClave()));
+    }
+
+    @PostMapping
+    public ResponseEntity<OrdenResponseDTO> createOrden(
+            @Valid @RequestBody OrdenCreateDTO ordenCreateDTO
+    ) {
+        OrdenResponseDTO ordenCreada = ordenesService.createOrden(ordenCreateDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ordenCreada);
     }
 }

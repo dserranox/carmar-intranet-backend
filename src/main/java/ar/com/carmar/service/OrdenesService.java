@@ -1,11 +1,13 @@
 package ar.com.carmar.service;
 
+import ar.com.carmar.dto.OrdenCreateDTO;
 import ar.com.carmar.dto.OrdenResponseDTO;
 import ar.com.carmar.dto.OrdenesExcelDTO;
 import ar.com.carmar.entity.Clientes;
 import ar.com.carmar.entity.Ordenes;
 import ar.com.carmar.entity.Productos;
 import ar.com.carmar.entity.Situaciones;
+import ar.com.carmar.enums.SituacionesEnum;
 import ar.com.carmar.repository.ClienteRepository;
 import ar.com.carmar.repository.OrdenesRepository;
 import ar.com.carmar.repository.ProductosRepository;
@@ -142,19 +144,100 @@ public class OrdenesService extends BaseService{
         return count;
     }
 
-    public OrdenResponseDTO finalizarOrden(OrdenResponseDTO ordenDto) {
+    public OrdenResponseDTO avanzarOrden(OrdenResponseDTO ordenDto, String estadoClave) {
         Ordenes orden = ordenesRepository.findById(ordenDto.getId()).orElseGet(Ordenes::new);
 
         if (orden == null){
             throw new EntityNotFoundException("Orden no encontrada.");
         }
-        Optional<Situaciones> situacionTerminada = situacionesRepository.findBySitEstadoClaveIgnoreCase("TERMINADO");
+        Optional<Situaciones> situacionTerminada = situacionesRepository.findBySitEstadoClaveIgnoreCase(estadoClave);
 
-        orden.setFechaFinalizacion(LocalDateTime.now());
+        if(estadoClave.equals(SituacionesEnum.TERMINADO.getDescripcion())) {
+            orden.setFechaFinalizacion(LocalDateTime.now());
+        }
         orden.setSituacion(situacionTerminada.get());
         auditar(orden, SecurityContextHolder.getContext().getAuthentication().getName() );
 
         ordenesRepository.save(orden);
         return toDto(orden);
+    }
+
+    /**
+     * Genera el número de plan con formato YY-XXX
+     * donde YY son los dos últimos dígitos del año y XXX es el consecutivo
+     */
+    private String generarNumeroPlan(int anio) {
+        // Obtener los dos últimos dígitos del año
+        String anioCorto = String.valueOf(anio).substring(2);
+
+        // Buscar la última orden del año
+        Optional<Ordenes> ultimaOrden = ordenesRepository.findLastByAnio(anio);
+
+        int siguienteConsecutivo = 1;
+        if (ultimaOrden.isPresent()) {
+            String ultimoPlan = ultimaOrden.get().getOrdNroPlan();
+            // Extraer el consecutivo del formato YY-XXX
+            try {
+                String[] partes = ultimoPlan.split("-");
+                if (partes.length == 2) {
+                    int ultimoConsecutivo = Integer.parseInt(partes[1]);
+                    siguienteConsecutivo = ultimoConsecutivo + 1;
+                }
+            } catch (NumberFormatException e) {
+                // Si no se puede parsear, empezar desde 1
+                siguienteConsecutivo = 1;
+            }
+        }
+
+        // Formatear el consecutivo con tres dígitos (001, 002, ..., 999)
+        String consecutivo = String.format("%03d", siguienteConsecutivo);
+        return anioCorto + "-" + consecutivo;
+    }
+
+    @Transactional
+    public OrdenResponseDTO createOrden(OrdenCreateDTO dto) {
+        // Calcular el año en curso
+        int anioActual = LocalDate.now().getYear();
+
+        // Generar el número de plan automáticamente
+        String nroPlan = generarNumeroPlan(anioActual);
+
+        Ordenes nuevaOrden = new Ordenes();
+        nuevaOrden.setOrdAnio(anioActual);
+        nuevaOrden.setOrdNroPlan(nroPlan);
+        nuevaOrden.setOrdenInterna("1");
+        nuevaOrden.setCantidad(dto.getCantidad());
+        nuevaOrden.setHoja(dto.getHoja());
+        nuevaOrden.setEtiqueta(dto.getEtiqueta());
+
+        Optional<Situaciones> situacionTerminada = situacionesRepository.findBySitEstadoClaveIgnoreCase("PLANIFICADO");
+        nuevaOrden.setSituacion(situacionTerminada.get());
+
+        // Asignar Cliente si existe
+        if (dto.getClienteId() != null) {
+            Clientes cliente = clienteRepository.findById(dto.getClienteId())
+                    .orElseThrow(() -> new EntityNotFoundException("Cliente no encontrado con ID: " + dto.getClienteId()));
+            nuevaOrden.setCliente(cliente);
+        }
+
+        // Asignar Producto si existe (prioriza ID sobre código)
+        if (dto.getProductoId() != null) {
+            Productos producto = productosRepository.findById(dto.getProductoId())
+                    .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado con ID: " + dto.getProductoId()));
+            nuevaOrden.setProducto(producto);
+        } else if (StringUtils.hasText(dto.getProductoCodigo())) {
+            Productos producto = productosRepository.findByPrdCodigoProducto(dto.getProductoCodigo().trim())
+                    .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado con código: " + dto.getProductoCodigo()));
+            nuevaOrden.setProducto(producto);
+        }
+
+        // Auditoría
+        String username = SecurityContextHolder.getContext().getAuthentication() != null
+                ? SecurityContextHolder.getContext().getAuthentication().getName()
+                : "SYSTEM";
+        auditar(nuevaOrden, username);
+
+        Ordenes ordenGuardada = ordenesRepository.save(nuevaOrden);
+        return toDto(ordenGuardada);
     }
 }
