@@ -66,7 +66,7 @@ public class TareasService extends BaseService {
 
         Tareas tarea = tareasRepository.findById(tareaDto.getId()).orElseThrow();
 
-        tarea.setTarFechaFin(LocalDateTime.now());
+        tarea.setTarFechaFin(tareaDto.getFechaFinalizacion() != null ? tareaDto.getFechaFinalizacion() : LocalDateTime.now());
         tarea.setTarCantidad(tareaDto.getCantidad());
         tarea.setTarObservaciones(tareaDto.getObservaciones());
         auditar(tarea, usuario.getUsername());
