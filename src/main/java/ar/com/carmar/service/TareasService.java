@@ -69,6 +69,10 @@ public class TareasService extends BaseService {
         tarea.setTarFechaFin(tareaDto.getFechaFinalizacion() != null ? tareaDto.getFechaFinalizacion() : LocalDateTime.now());
         tarea.setTarCantidad(tareaDto.getCantidad());
         tarea.setTarObservaciones(tareaDto.getObservaciones());
+        tarea.setTarNoConforme(tareaDto.getNoConforme());
+        tarea.setTarPerdidaRendimiento(tareaDto.getPerdidaRendimiento());
+        tarea.setTarPerdidaMantenimiento(tareaDto.getPerdidaMantenimiento());
+        tarea.setTarPerdidaCalidad(tareaDto.getPerdidaCalidad());
         auditar(tarea, usuario.getUsername());
         return new TareasResponseDTO(tareasRepository.save(tarea));
     }

@@ -45,6 +45,18 @@ public class Tareas implements IAuditable{
     @Column(name = "TAR_OBSERVACIONES")
     private String tarObservaciones;
 
+    @Column(name = "TAR_NO_CONFORME")
+    private Integer tarNoConforme;
+
+    @Column(name = "TAR_PERDIDA_RENDIMIENTO")
+    private Integer tarPerdidaRendimiento;
+
+    @Column(name = "TAR_PERDIDA_MANTENIMIENTO")
+    private Integer tarPerdidaMantenimiento;
+
+    @Column(name = "TAR_PERDIDA_CALIDAD")
+    private Integer tarPerdidaCalidad;
+
     @Column(name = "AUD_USR_INS", nullable = false, length = 250)
     private String audUsrIns;
     @Column(name = "AUD_USR_UPD", length = 250)

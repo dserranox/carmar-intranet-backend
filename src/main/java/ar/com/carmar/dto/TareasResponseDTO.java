@@ -27,6 +27,10 @@ public class TareasResponseDTO {
     private String observaciones;
     private String username;
     private Integer ordCantidad;
+    private Integer noConforme;
+    private Integer perdidaRendimiento;
+    private Integer perdidaMantenimiento;
+    private Integer perdidaCalidad;
     private List<ProductoDocumentosDTO> documentos;
 
     public TareasResponseDTO(Tareas tareas) {
@@ -42,6 +46,10 @@ public class TareasResponseDTO {
         this.observaciones = tareas.getTarObservaciones();
         this.username = tareas.getAudUsrIns();
         this.ordCantidad = tareas.getOrden().getCantidad();
+        this.noConforme = tareas.getTarNoConforme();
+        this.perdidaRendimiento = tareas.getTarPerdidaRendimiento();
+        this.perdidaMantenimiento = tareas.getTarPerdidaMantenimiento();
+        this.perdidaCalidad = tareas.getTarPerdidaCalidad();
 
         var prod = (tareas.getOrden() != null) ? tareas.getOrden().getProducto() : null;
         if (prod != null && prod.getProductoDocumentos() != null) {
