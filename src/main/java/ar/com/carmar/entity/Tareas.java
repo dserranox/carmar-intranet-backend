@@ -61,12 +61,12 @@ public class Tareas implements IAuditable{
     private String audUsrIns;
     @Column(name = "AUD_USR_UPD", length = 250)
     private String audUsrUpd;
-    @Temporal(TemporalType.TIMESTAMP)
+
     @Column(name = "AUD_FECHA_INS", nullable = false, length = 7)
-    private Date audFechaIns;
-    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime audFechaIns;
+
     @Column(name = "AUD_FECHA_UPD", length = 7)
-    private Date audFechaUpd;
+    private LocalDateTime audFechaUpd;
 
     public Tareas(Ordenes orden, Operaciones operacion, Integer tarNroMaquina, Usuarios usuario, LocalDateTime tarFechaInicio) {
         this.orden = orden;

@@ -60,6 +60,7 @@ public class OrdenesService extends BaseService{
         ordenResponseDTO.setAnio(ordenes.getOrdAnio());
         ordenResponseDTO.setFechaInicio(ordenes.getFechaIncio());
         ordenResponseDTO.setFechaFinalizacion(ordenes.getFechaFinalizacion());
+        ordenResponseDTO.setFechaCreacion(ordenes.getAudFechaIns());
         ordenResponseDTO.setOrdenInterna(ordenes.getOrdenInterna());
         ordenResponseDTO.setCantidad(ordenes.getCantidad());
         ordenResponseDTO.setHoja(ordenes.getHoja());

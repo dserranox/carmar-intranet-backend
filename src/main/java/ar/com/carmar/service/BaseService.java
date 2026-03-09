@@ -3,6 +3,7 @@ package ar.com.carmar.service;
 
 import ar.com.carmar.entity.IAuditable;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class BaseService {
@@ -11,11 +12,11 @@ public class BaseService {
 
     public void auditar(IAuditable domain, String userDomain) {
         if (domain.getAudFechaIns() == null && domain.getAudUsrIns() == null) {
-            domain.setAudFechaIns(new Date());
+            domain.setAudFechaIns(LocalDateTime.now());
             domain.setAudUsrIns(userDomain);
         }
 
-        domain.setAudFechaUpd(new Date());
+        domain.setAudFechaUpd(LocalDateTime.now());
         domain.setAudUsrUpd(userDomain);
     }
 }
