@@ -24,14 +24,18 @@ public class OrdenCreateDTO {
 
     private String ordenInterna;
 
+    @NotNull(message = "El cliente es obligatorio")
     private Long clienteId;
 
+    @NotNull(message = "El producto es obligatorio")
     private Long productoId;
 
     private String productoCodigo;
 
     private LocalDateTime fechaInicio;
 
+    @NotNull(message = "La cantidad es obligatoria")
+    @Min(value = 1, message = "La cantidad debe ser mayor a 0")
     private Integer cantidad;
 
     private String hoja;

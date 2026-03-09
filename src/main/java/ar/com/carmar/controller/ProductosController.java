@@ -21,7 +21,8 @@ public class ProductosController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductoResponseDTO>> buscarProductos(@RequestParam String filtro) {
+    public ResponseEntity<List<ProductoResponseDTO>> buscarProductos(
+            @RequestParam(required = false, defaultValue = "") String filtro) {
         return ResponseEntity.ok(productosService.buscarProductos(filtro));
     }
 }

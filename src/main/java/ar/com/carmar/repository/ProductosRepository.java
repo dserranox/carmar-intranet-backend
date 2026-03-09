@@ -12,6 +12,6 @@ public interface ProductosRepository extends JpaRepository<Productos, Long> {
     Optional<Productos> findByPrdCodigoProducto(String codigoProducto);
 
     @Query("SELECT p FROM Productos p WHERE LOWER(p.prdCodigoProducto) LIKE LOWER(CONCAT('%', :filtro, '%')) " +
-           "OR LOWER(p.prdDescripcion) LIKE LOWER(CONCAT('%', :filtro, '%'))")
+           "OR LOWER(p.prdDescripcion) LIKE LOWER(CONCAT('%', :filtro, '%')) ORDER BY p.prdCodigoProducto asc")
     List<Productos> buscarPorCodigoODescripcion(@Param("filtro") String filtro);
 }
