@@ -11,4 +11,7 @@ public interface VwUsuarioPermisosRepository extends JpaRepository<VwUsuarioPerm
 
     @Query("select distinct v.prmClave from VwUsuarioPermisos v where lower(v.usrUsername) = lower(:username)")
     List<String> findPermisosClavesByUsername(@Param("username") String username);
+
+    @Query("select distinct v.rolNombre from VwUsuarioPermisos v where lower(v.usrUsername) = lower(:username)")
+    List<String> findRolNombresByUsername(@Param("username") String username);
 }

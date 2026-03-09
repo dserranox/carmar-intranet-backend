@@ -8,6 +8,7 @@ import ar.com.carmar.service.OrdenesService;
 import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -41,6 +42,7 @@ public class OrdersController {
      * GET /api/orders?year=2025
      * GET /api/orders?year=2025&path=/ruta/al/archivo.xlsx
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/from-excel")
     public ResponseEntity<List<Map<String, Object>>> getOrders(
             @RequestParam @NotNull Integer year,
@@ -67,6 +69,7 @@ public class OrdersController {
 //        return ResponseEntity.ok(ordenesService.avanzarOrden(ordenResponseDTO, SituacionesEnum.TERMINADO.getDescripcion()));
 //    }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/avanzar-orden")
     public ResponseEntity<OrdenResponseDTO> avanzarOrden(
             @RequestBody OrdenResponseDTO ordenResponseDTO
@@ -74,6 +77,7 @@ public class OrdersController {
         return ResponseEntity.ok(ordenesService.avanzarOrden(ordenResponseDTO, ordenResponseDTO.getSituacionClave()));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<OrdenResponseDTO> createOrden(
             @Valid @RequestBody OrdenCreateDTO ordenCreateDTO

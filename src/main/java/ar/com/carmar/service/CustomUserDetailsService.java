@@ -31,11 +31,17 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
         if (Boolean.FALSE.equals(u.getActivo())) throw new UsernameNotFoundException("Usuario inactivo");
 
-        List<GrantedAuthority> authorities = permisosRepository.findPermisosClavesByUsername(u.getUsername())
-                .stream()
-                .distinct()
+        List<GrantedAuthority> authorities = new java.util.ArrayList<>();
+
+        permisosRepository.findPermisosClavesByUsername(u.getUsername())
+                .stream().distinct()
                 .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+                .forEach(authorities::add);
+
+        permisosRepository.findRolNombresByUsername(u.getUsername())
+                .stream().distinct()
+                .map(rol -> new SimpleGrantedAuthority("ROLE_" + rol))
+                .forEach(authorities::add);
 
         return User.withUsername(u.getUsername())
                 .password(u.getPassword())
