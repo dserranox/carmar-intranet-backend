@@ -56,8 +56,8 @@ public class TareasResponseDTO {
         var prod = (tareas.getOrden() != null) ? tareas.getOrden().getProducto() : null;
         this.productoCodigo = prod != null ? prod.getPrdCodigoProducto() : null;
         this.productoDescripcion = prod != null ? prod.getPrdDescripcion() : null;
+        this.nroPlan = tareas.getOrden().getOrdNroPlan();
         if (prod != null && prod.getProductoDocumentos() != null) {
-            this.nroPlan = tareas.getOrden().getOrdNroPlan();
             this.documentos = prod.getProductoDocumentos()
                     .stream()
                     .map(doc -> {
