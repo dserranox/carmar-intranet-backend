@@ -31,6 +31,11 @@ public class OrdersController {
         this.ordenesService = ordenesService;
     }
 
+    @GetMapping("/years")
+    public ResponseEntity<List<Integer>> getYears() {
+        return ResponseEntity.ok(ordenesService.getAnios());
+    }
+
     @GetMapping()
     public ResponseEntity<List<OrdenResponseDTO>> getAll(
             @RequestParam @NotNull Integer year

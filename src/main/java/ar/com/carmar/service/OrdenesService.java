@@ -48,6 +48,11 @@ public class OrdenesService extends BaseService{
     }
 
     @Transactional(readOnly = true)
+    public List<Integer> getAnios() {
+        return ordenesRepository.findDistinctAniosOrderByDesc();
+    }
+
+    @Transactional(readOnly = true)
     public List<OrdenResponseDTO> getAllByYear(Integer year) {
         List<Ordenes> ordenes = ordenesRepository.findByOrdAnioOrderByOrdNroPlanAsc(year);
         return ordenes.stream().map(this::toDto).toList();
@@ -155,6 +160,9 @@ public class OrdenesService extends BaseService{
 
         if(estadoClave.equals(SituacionesEnum.TERMINADO.getDescripcion())) {
             orden.setFechaFinalizacion(LocalDateTime.now());
+        }
+        if(estadoClave.equals(SituacionesEnum.EN_PROCESO.getDescripcion())){
+            orden.setFechaIncio(LocalDateTime.now());
         }
         orden.setSituacion(situacionTerminada.get());
         auditar(orden, SecurityContextHolder.getContext().getAuthentication().getName() );

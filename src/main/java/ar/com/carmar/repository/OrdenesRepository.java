@@ -15,4 +15,7 @@ public interface OrdenesRepository extends JpaRepository<Ordenes, Long> {
 
     @Query("SELECT o FROM Ordenes o WHERE o.ordAnio = :anio ORDER BY o.ordNroPlan DESC LIMIT 1")
     Optional<Ordenes> findLastByAnio(@Param("anio") Integer anio);
+
+    @Query("SELECT DISTINCT o.ordAnio FROM Ordenes o ORDER BY o.ordAnio DESC")
+    List<Integer> findDistinctAniosOrderByDesc();
 }

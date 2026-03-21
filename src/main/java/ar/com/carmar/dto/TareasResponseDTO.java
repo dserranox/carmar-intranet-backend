@@ -17,6 +17,8 @@ public class TareasResponseDTO {
     private Long id;
     private Long ordenId;
     private String nroPlan;
+    private String productoCodigo;
+    private String productoDescripcion;
     private Long operacionId;
     private String operacionNombre;
     private String operacionNombreCorto;
@@ -52,6 +54,8 @@ public class TareasResponseDTO {
         this.perdidaCalidad = tareas.getTarPerdidaCalidad();
 
         var prod = (tareas.getOrden() != null) ? tareas.getOrden().getProducto() : null;
+        this.productoCodigo = prod != null ? prod.getPrdCodigoProducto() : null;
+        this.productoDescripcion = prod != null ? prod.getPrdDescripcion() : null;
         if (prod != null && prod.getProductoDocumentos() != null) {
             this.nroPlan = tareas.getOrden().getOrdNroPlan();
             this.documentos = prod.getProductoDocumentos()

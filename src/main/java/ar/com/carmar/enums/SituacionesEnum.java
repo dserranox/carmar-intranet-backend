@@ -5,7 +5,8 @@ public enum SituacionesEnum {
     PLANIFICADO("PLANIFICADO"),
     EN_PROCESO("EN PROCESO"),
     TERMINADO("TERMINADO"),
-    FALTA_MATERIAL("FALTA MATERIAL");
+    FALTA_MATERIAL("FALTA MATERIAL"),
+    CANCELADO("CANCELADO");
 
     private final String descripcion;
 
