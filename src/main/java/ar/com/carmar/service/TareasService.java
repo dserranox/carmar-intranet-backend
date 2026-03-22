@@ -37,6 +37,10 @@ public class TareasService extends BaseService {
         Usuarios usuario = usuariosRepository.findByUsernameIgnoreCase(username)
                 .orElseThrow(() -> new IllegalStateException("Usuario autenticado no encontrado: " + username));
 
+        if (tareasRepository.existsByUsuarioAndTarFechaFinIsNull(usuario)) {
+            throw new IllegalStateException("Tenés una tarea en curso. Finalizala antes de iniciar una nueva.");
+        }
+
         Tareas tarea = new Tareas(new Ordenes(ordenId), new Operaciones(operacionId), nroMaquina, usuario, LocalDateTime.now());
         auditar(tarea, usuario.getUsername());
 

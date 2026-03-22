@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface TareasRepository extends JpaRepository<Tareas, Long>, JpaSpecificationExecutor<Tareas> {
 
+    boolean existsByUsuarioAndTarFechaFinIsNull(Usuarios usuario);
+
     List<Tareas> findByUsuarioOrderByTarFechaInicioDesc(Usuarios usuario);
 
     List<Tareas> findByUsuario_IdOrderByTarFechaInicioDesc(Long usuarioId);

@@ -2,9 +2,12 @@ package ar.com.carmar.controller;
 
 import ar.com.carmar.dto.TareasResponseDTO;
 import ar.com.carmar.service.TareasService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 import java.io.IOException;
 import java.util.List;
@@ -38,5 +41,10 @@ public class TareasController {
             @RequestBody TareasResponseDTO tareaDto
     ) throws IOException {
         return ResponseEntity.ok(tareasService.finalizarTareas(tareaDto));
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<Map<String, String>> handleIllegalState(IllegalStateException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", ex.getMessage()));
     }
 }
