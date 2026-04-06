@@ -1,13 +1,13 @@
 package ar.com.carmar.controller;
 
+import ar.com.carmar.dto.OperarioEstadoDTO;
 import ar.com.carmar.dto.TareasResponseDTO;
 import ar.com.carmar.service.TareasService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 import java.io.IOException;
 import java.util.List;
@@ -26,6 +26,12 @@ public class TareasController {
     @GetMapping("/byUsername")
     public ResponseEntity<List<TareasResponseDTO>> getAll() throws IOException {
         return ResponseEntity.ok(tareasService.getTareasByUser());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/operarios-activos")
+    public ResponseEntity<List<OperarioEstadoDTO>> getOperariosActivos() {
+        return ResponseEntity.ok(tareasService.getOperariosActivos());
     }
 
 

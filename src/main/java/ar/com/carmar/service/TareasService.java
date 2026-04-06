@@ -1,5 +1,6 @@
 package ar.com.carmar.service;
 
+import ar.com.carmar.dto.OperarioEstadoDTO;
 import ar.com.carmar.dto.ProductoDocumentosDTO;
 import ar.com.carmar.dto.TareasResponseDTO;
 import ar.com.carmar.entity.*;
@@ -79,6 +80,28 @@ public class TareasService extends BaseService {
         tarea.setTarPerdidaCalidad(tareaDto.getPerdidaCalidad());
         auditar(tarea, usuario.getUsername());
         return new TareasResponseDTO(tareasRepository.save(tarea));
+    }
+
+    public List<OperarioEstadoDTO> getOperariosActivos() {
+        return usuariosRepository.findByRoles_NombreAndActivoTrue("OPERARIO").stream()
+                .map(usuario -> {
+                    OperarioEstadoDTO dto = new OperarioEstadoDTO();
+                    dto.setUsername(usuario.getUsername());
+                    tareasRepository.findFirstByUsuarioAndTarFechaFinIsNull(usuario).ifPresent(tarea -> {
+                        dto.setFechaInicio(tarea.getTarFechaInicio());
+                        dto.setNroMaquina(tarea.getTarNroMaquina());
+                        dto.setOperacionNombre(tarea.getOperacion().getOpeNombre());
+                        Ordenes orden = tarea.getOrden();
+                        dto.setNroPlan(orden.getOrdNroPlan());
+                        if (orden.getProducto() != null) {
+                            dto.setProductoCodigo(orden.getProducto().getPrdCodigoProducto());
+                            dto.setProductoDescripcion(orden.getProducto().getPrdDescripcion());
+                        }
+                    });
+                    return dto;
+                })
+                .sorted(java.util.Comparator.comparing(OperarioEstadoDTO::getUsername))
+                .collect(Collectors.toList());
     }
 
     public List<TareasResponseDTO> getTareasByUser() {
