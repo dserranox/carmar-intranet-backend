@@ -39,7 +39,7 @@ public class TareasController {
     public ResponseEntity<TareasResponseDTO> inciarTarea(
             @RequestBody TareasResponseDTO tareaDto
     ) throws IOException {
-        return ResponseEntity.ok(tareasService.saveTareas(tareaDto.getOrdenId(), tareaDto.getOperacionId(), tareaDto.getNroMaquina()));
+        return ResponseEntity.ok(tareasService.saveTareas(tareaDto.getOrdenId(), tareaDto.getOperacionId(), tareaDto.getNroMaquina(), tareaDto.getUsuarioOperario()));
     }
 
     @PostMapping("/finalizar-tarea")

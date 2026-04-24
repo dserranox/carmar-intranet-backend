@@ -76,6 +76,15 @@ public class UsuarioService extends BaseService {
     }
 
     @Transactional(readOnly = true)
+    public List<UsuarioAdminDTO> getUsuariosActivos() {
+        return usuariosRepository.findAll().stream()
+                .filter(a -> a.getActivo()==true)
+                .sorted((a, b) -> a.getUsername().compareToIgnoreCase(b.getUsername()))
+                .map(this::toDTO)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
     public UsuarioAdminDTO getUsuarioById(Long id) {
         Usuarios usuario = usuariosRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("Usuario no encontrado: " + id));

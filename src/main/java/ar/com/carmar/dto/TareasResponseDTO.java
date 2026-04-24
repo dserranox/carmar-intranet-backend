@@ -34,6 +34,7 @@ public class TareasResponseDTO {
     private Integer perdidaMantenimiento;
     private Integer perdidaCalidad;
     private List<ProductoDocumentosDTO> documentos;
+    private String usuarioOperario;
 
     public TareasResponseDTO(Tareas tareas) {
         this.id = tareas.getTarId();

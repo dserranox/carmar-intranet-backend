@@ -33,17 +33,23 @@ public class TareasService extends BaseService {
         this.ordenesRepository = ordenesRepository;
     }
 
-    public TareasResponseDTO saveTareas(Long ordenId, Long operacionId, Integer nroMaquina){
+    public TareasResponseDTO saveTareas(Long ordenId, Long operacionId, Integer nroMaquina, String usuarioOperario){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Usuarios usuario = usuariosRepository.findByUsernameIgnoreCase(username)
+        Usuarios usuarioLogueado = usuariosRepository.findByUsernameIgnoreCase(username)
                 .orElseThrow(() -> new IllegalStateException("Usuario autenticado no encontrado: " + username));
 
-        if (tareasRepository.existsByUsuarioAndTarFechaFinIsNull(usuario)) {
-            throw new IllegalStateException("Tenés una tarea en curso. Finalizala antes de iniciar una nueva.");
+        Usuarios usuarioTarea = usuarioLogueado;
+        if (usuarioOperario != null && !usuarioOperario.equalsIgnoreCase(username)) {
+            usuarioTarea = usuariosRepository.findByUsernameIgnoreCase(usuarioOperario)
+                    .orElseThrow(() -> new IllegalStateException("Usuario operario no encontrado: " + usuarioOperario));
         }
 
-        Tareas tarea = new Tareas(new Ordenes(ordenId), new Operaciones(operacionId), nroMaquina, usuario, LocalDateTime.now());
-        auditar(tarea, usuario.getUsername());
+        if (tareasRepository.existsByUsuarioAndTarFechaFinIsNull(usuarioTarea)) {
+            throw new IllegalStateException("El operario tiene una tarea en curso. Finalizala antes de iniciar una nueva.");
+        }
+
+        Tareas tarea = new Tareas(new Ordenes(ordenId), new Operaciones(operacionId), nroMaquina, usuarioTarea, LocalDateTime.now());
+        auditar(tarea, usuarioLogueado.getUsername());
 
         TareasResponseDTO resposeDTO = new TareasResponseDTO(tareasRepository.save(tarea));
 

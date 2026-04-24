@@ -45,6 +45,12 @@ public class UsuarioController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/activos")
+    public ResponseEntity<List<UsuarioAdminDTO>> getUsuariosActivos() {
+        return ResponseEntity.ok(usuarioService.getUsuariosActivos());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/admin")
     public ResponseEntity<UsuarioAdminDTO> createUsuario(@RequestBody UsuarioCreateDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.createUsuario(dto));
